@@ -1,0 +1,9 @@
+Dan Orban - CSCI 5607 - Assignment 0
+
+This program takes an imput file with "imsize width height" as its first line 
+and outputs a PPM file of width and height with a pattern.
+
+Build the program with make.
+
+Program usage:
+    ray_tracer <input.txt> <output.ppm>
