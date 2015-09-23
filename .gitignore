@@ -1,4 +1,7 @@
-output.ppm
+*-local.*
+*.ppm
 *~
 *.zip
+*.d
+*.o
 ray_trace
