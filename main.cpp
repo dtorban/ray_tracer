@@ -20,7 +20,7 @@ main(int argc, char** argv)
   v.x = 1;
   v.y = 2;
   v.z = 3;
-  cout << v[2] << " " << v.length() << " " << v.normalize().z << endl;
+  cout << v[2] << " " << v.length() << " " << v.normalize() << " " << v*v << endl;
 
   // Use default file names if none are passed in
   string fileName = "input.txt";
