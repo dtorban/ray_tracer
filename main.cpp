@@ -9,12 +9,19 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include "vec.h"
 
 using namespace std;
 
 int
 main(int argc, char** argv)
 {
+  vec3 v;
+  v.x = 1;
+  v.y = 2;
+  v.z = 3;
+  cout << v[2] << " " << v.length() << " " << v.normalize().z << endl;
+
   // Use default file names if none are passed in
   string fileName = "input.txt";
   string outputFileName = "output.ppm";
