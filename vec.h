@@ -13,10 +13,14 @@ public:
   virtual T& operator[](int index) = 0;
   void operator=(const vec<T>& v) { copy(v); }
   void operator+=(const vec<T>& v) { add(v); }
+  void operator-=(const vec<T>& v) { subtract(v); }
   void operator*=(const vec<T>& v) { mult(v); }
+  void operator/=(const vec<T>& v) { div(v); }
   void operator=(const T& v) { copy(v); }
   void operator+=(const T& v) { add(v); }
+  void operator-=(const T& v) { subtract(v); }
   void operator*=(const T& v) { mult(v); }
+  void operator/=(const T& v) { div(v); }
   T dot(const vec& v) const;
   T length() const;
 
@@ -26,8 +30,12 @@ protected:
   void copy(const T& v);
   void add(const vec<T>& v);
   void add(const T& val);
+  void subtract(const vec<T>& v);
+  void subtract(const T& val);
   void mult(const vec<T>& v);
   void mult(const T& val);
+  void div(const vec<T>& v);
+  void div(const T& val);
 };
 
 template <typename T>
@@ -48,9 +56,13 @@ public:
 
   v2<T> normalize() { v2<T> vec(*this); vec.normalizeVec(); return vec; }
   v2<T> operator+(const v2<T>& v) { v2<T> vec(*this); vec+=v; return vec; }
+  v2<T> operator-(const v2<T>& v) { v2<T> vec(*this); vec-=v; return vec; }
   v2<T> operator*(const v2<T>& v) { v2<T> vec(*this); vec*=v; return vec; }
+  v2<T> operator/(const v2<T>& v) { v2<T> vec(*this); vec/=v; return vec; }
   v2<T> operator+(const T& v) { v2<T> vec(*this); vec+=v; return vec; }
+  v2<T> operator-(const T& v) { v2<T> vec(*this); vec-=v; return vec; }
   v2<T> operator*(const T& v) { v2<T> vec(*this); vec*=v; return vec; }
+  v2<T> operator/(const T& v) { v2<T> vec(*this); vec/=v; return vec; }
 };
 
 template <typename T>
@@ -71,9 +83,13 @@ public:
 
   v3<T> normalize() { v3<T> vec(*this); vec.normalizeVec(); return vec; }
   v3<T> operator+(const v3<T>& v) { v3<T> vec(*this); vec+=v; return vec; }
+  v3<T> operator-(const v3<T>& v) { v3<T> vec(*this); vec-=v; return vec; }
   v3<T> operator*(const v3<T>& v) { v3<T> vec(*this); vec*=v; return vec; }
+  v3<T> operator/(const v3<T>& v) { v3<T> vec(*this); vec/=v; return vec; }
   v3<T> operator+(const T& v) { v3<T> vec(*this); vec+=v; return vec; }
+  v3<T> operator-(const T& v) { v3<T> vec(*this); vec-=v; return vec; }
   v3<T> operator*(const T& v) { v3<T> vec(*this); vec*=v; return vec; }
+  v3<T> operator/(const T& v) { v3<T> vec(*this); vec/=v; return vec; }
 
   v3<T> cross(const v3<T>& v) const;
 };
@@ -96,9 +112,13 @@ public:
 
   v4<T> normalize() { v4<T> vec(*this); vec.normalizeVec(); return vec; }
   v4<T> operator+(const v4<T>& v) { v4<T> vec(*this); vec+=v; return vec; }
+  v4<T> operator-(const v4<T>& v) { v4<T> vec(*this); vec-=v; return vec; }
   v4<T> operator*(const v4<T>& v) { v4<T> vec(*this); vec*=v; return vec; }
+  v4<T> operator/(const v4<T>& v) { v4<T> vec(*this); vec/=v; return vec; }
   v4<T> operator+(const T& v) { v4<T> vec(*this); vec+=v; return vec; }
+  v4<T> operator-(const T& v) { v4<T> vec(*this); vec-=v; return vec; }
   v4<T> operator*(const T& v) { v4<T> vec(*this); vec*=v; return vec; }
+  v4<T> operator/(const T& v) { v4<T> vec(*this); vec/=v; return vec; }
 };
 
 typedef v2<float> vec2;
@@ -163,7 +183,7 @@ template <typename T>
 template <typename T>
   void vec<T>::copy(const T& v)
   {
-    for (int f = 0; f < std::min(getSize()); f++)
+    for (int f = 0; f < getSize(); f++)
     {
       (*this)[f] = v;
     }
@@ -181,9 +201,27 @@ template <typename T>
 template <typename T>
   void vec<T>::add(const T& val)
   {
-    for (int f = 0; f < std::min(getSize()); f++)
+    for (int f = 0; f < getSize(); f++)
     {
       (*this)[f] += val;
+    }
+  }
+
+template <typename T>
+  void vec<T>::subtract(const vec<T>& v)
+  {
+    for (int f = 0; f < std::min(getSize(),v.getSize()); f++)
+    {
+      (*this)[f] -= v[f];
+    }
+  }
+
+template <typename T>
+  void vec<T>::subtract(const T& val)
+  {
+    for (int f = 0; f < getSize(); f++)
+    {
+      (*this)[f] -= val;
     }
   }
 
@@ -199,9 +237,27 @@ template <typename T>
 template <typename T>
   void vec<T>::mult(const T& val)
   {
-    for (int f = 0; f < std::min(getSize()); f++)
+    for (int f = 0; f < getSize(); f++)
     {
       (*this)[f] *= val;
+    }
+  }
+
+template <typename T>
+  void vec<T>::div(const vec<T>& v)
+  {
+    for (int f = 0; f < std::min(getSize(),v.getSize()); f++)
+    {
+      (*this)[f] /= v[f];
+    }
+  }
+
+template <typename T>
+  void vec<T>::div(const T& val)
+  {
+    for (int f = 0; f < getSize(); f++)
+    {
+      (*this)[f] /= val;
     }
   }
 

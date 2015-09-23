@@ -11,6 +11,7 @@
 #include <sstream>
 #include "vec.h"
 #include "parser.h"
+#include <cmath>
 
 using namespace std;
 
@@ -39,16 +40,35 @@ main(int argc, char** argv)
 
   vec3* image = new vec3[(int)(width*height)];
 
+  //define u and v
+  vec3 u = scene.viewdir.cross(scene.updir).normalize();
+  vec3 v = u.cross(scene.viewdir).normalize()*-1.0f;
+  float aspectRatio = (1.0*height)/width;
+  float d = 1.0f;
+#define PI 3.14159265359
+  float w = 2.0*d*tan(scene.fovh*PI/180.0/2.0);
+  float h = w/aspectRatio;
+  vec3 n = scene.viewdir.normalize();
+  vec3 ul = scene.eye + n*d + v*(h/2.0f) - u*(w/2.0f);
+  vec3 ur = scene.eye + n*d + v*(h/2.0f) + u*(w/2.0f);
+  vec3 ll = scene.eye + n*d - v*(h/2.0f) - u*(w/2.0f);
+  vec3 lr = scene.eye + n*d - v*(h/2.0f) + u*(w/2.0f);
+  vec3 dh = (ur - ul)/(1.0f*width-1.0f);
+  vec3 dv = (ll - ul)/(1.0f*height-1.0f);
+
+  cout << ul << ur << ll << lr << endl;
+
   // draw image
   for (int y = 0; y < height; y++)
   {
     for (int x = 0; x < width; x++)
     {
-      image[x*width + y].r = (y*255/height);
-      image[x*width + y].g = (x*255/width);
+      //cout << ul+dh*x+dv*y << endl;
+      image[x*width + y].r = (1.0/height)*y;
+      image[x*width + y].g = (1.0/width)*x;
       float a = 1.0*y/height;
       float b = 1.0*x/height;
-      image[x*width + y].b = ((y/3)%2==0 && (x/5)%2==0 && a*b < 0.30  ? (height-y)*255/height : 0);
+      image[x*width + y].b = ((y/3)%2==0 && (x/5)%2==0 && a*b < 0.30  ? (1.0/height)*(height-y) : 0);
     }
   }
 
@@ -65,9 +85,9 @@ main(int argc, char** argv)
   {
     for (int x = 0; x < width; x++)
     {
-      output << " " << image[x*width + y].r;
-      output << " " << image[x*width + y].g;
-      output << " " << image[x*width + y].b;
+      output << " " << (int)(255*image[x*width + y].r);
+      output << " " << (int)(255*image[x*width + y].g);
+      output << " " << (int)(255*image[x*width + y].b);
       pixelCount++;
       if (pixelCount% 5 == 0)
       {
@@ -79,82 +99,6 @@ main(int argc, char** argv)
   output.close();
 
   delete[] image;
-
-  /*  // Get file size
-  file.seekg(0, ios::end);
-  streampos size = file.tellg();
-  file.seekg(0, ios::beg);
-
-  // First line must start with imsize
-  char memblock[256];
-  file.read(memblock, 7);
-  if (string(memblock) != "imsize ")
-  {
-    cout << "Input file needs to start with imsize.\n" <<endl;
-    return 1;
-  }
-
-  // Read in width
-  int width, height;
-  if (file.tellg() < size)
-  {
-    file >> width;
-  }
-  else
-  {
-    cout << "Missing width.\n" <<endl;
-    return 1;
-  }
-
-  // Read in height
-  if (file.tellg() < size)
-  {
-    file >> height;
-  }
-  else
-  {
-    cout << "Missing height.\n" <<endl;
-    return 1;
-  }
-
-  // Make sure that the width and height are greater than 0
-  if (width <= 0 || height <= 0)
-  {
-    cout << "Width and height must be greater than 0.\n" <<endl;
-    return 1;
-  }
-
-  cout << "imsize " << width << " " << height << endl;
-
-  file.close();
-
-  // Output header information
-  fstream output;
-  output.open(outputFileName.c_str(), ios::out);
-  output << "P3" << endl;
-  output << width << " " << height << endl;
-  output << 255 << endl;
-
-  // Output pixels
-  int pixelCount = 0;
-  for (int y = 0; y < height; y++)
-  {
-    for (int x = 0; x < width; x++)
-    {
-      output << " " << (y*255/height);
-      output << " " << (x*255/width);
-      float a = 1.0*y/height;
-      float b = 1.0*x/height;
-      output << " " << ((y/3)%2==0 && (x/5)%2==0 && a*b < 0.30  ? (height-y)*255/height : 0);
-      pixelCount++;
-      if (pixelCount% 5 == 0)
-      {
-	output << endl;
-      }
-    }
-  }
-
-  output.close();*/
 
   return 0;
 }
