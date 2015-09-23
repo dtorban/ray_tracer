@@ -10,6 +10,7 @@
 #include <string>
 #include <sstream>
 #include "vec.h"
+#include "parser.h"
 
 using namespace std;
 
@@ -44,16 +45,11 @@ main(int argc, char** argv)
     }
   }
 
-  // Open file if exists
-  ifstream file;
-  file.open(fileName.c_str(), ios::in);
-  if (!file)
-  {
-    cout << "Could not find file: " << fileName << "\n" <<endl;
-    return 0;
-  }
+  Scene scene;
+  SceneParser parser;
+  parser.parse(fileName, scene);
 
-  // Get file size
+  /*  // Get file size
   file.seekg(0, ios::end);
   streampos size = file.tellg();
   file.seekg(0, ios::beg);
@@ -127,7 +123,7 @@ main(int argc, char** argv)
     }
   }
 
-  output.close();
+  output.close();*/
 
   return 0;
 }
