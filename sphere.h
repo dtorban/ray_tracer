@@ -12,6 +12,8 @@ public:
   vec3 pos;
   float r;
   vec3 mtlcolor;
+
+  bool intersectRay(const vec3& start, const vec3& dir, vec3& intersect, float& t);
 };
 
 #endif

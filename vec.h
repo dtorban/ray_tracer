@@ -81,15 +81,15 @@ public:
   virtual T& operator[](int index) { return index == 2 ? z : v2<T>::operator[](index); }
   virtual int getSize() const { return 3; }
 
-  v3<T> normalize() { v3<T> vec(*this); vec.normalizeVec(); return vec; }
-  v3<T> operator+(const v3<T>& v) { v3<T> vec(*this); vec+=v; return vec; }
-  v3<T> operator-(const v3<T>& v) { v3<T> vec(*this); vec-=v; return vec; }
-  v3<T> operator*(const v3<T>& v) { v3<T> vec(*this); vec*=v; return vec; }
-  v3<T> operator/(const v3<T>& v) { v3<T> vec(*this); vec/=v; return vec; }
-  v3<T> operator+(const T& v) { v3<T> vec(*this); vec+=v; return vec; }
-  v3<T> operator-(const T& v) { v3<T> vec(*this); vec-=v; return vec; }
-  v3<T> operator*(const T& v) { v3<T> vec(*this); vec*=v; return vec; }
-  v3<T> operator/(const T& v) { v3<T> vec(*this); vec/=v; return vec; }
+  v3<T> normalize() const { v3<T> vec(*this); vec.normalizeVec(); return vec; }
+  v3<T> operator+(const v3<T>& v) const { v3<T> vec(*this); vec+=v; return vec; }
+  v3<T> operator-(const v3<T>& v) const { v3<T> vec(*this); vec-=v; return vec; }
+  v3<T> operator*(const v3<T>& v) const { v3<T> vec(*this); vec*=v; return vec; }
+  v3<T> operator/(const v3<T>& v) const { v3<T> vec(*this); vec/=v; return vec; }
+  v3<T> operator+(const T& v) const { v3<T> vec(*this); vec+=v; return vec; }
+  v3<T> operator-(const T& v) const { v3<T> vec(*this); vec-=v; return vec; }
+  v3<T> operator*(const T& v) const { v3<T> vec(*this); vec*=v; return vec; }
+  v3<T> operator/(const T& v) const { v3<T> vec(*this); vec/=v; return vec; }
 
   v3<T> cross(const v3<T>& v) const;
 };

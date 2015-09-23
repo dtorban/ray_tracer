@@ -56,6 +56,8 @@ main(int argc, char** argv)
   vec3 dh = (ur - ul)/(1.0f*width-1.0f);
   vec3 dv = (ll - ul)/(1.0f*height-1.0f);
 
+  vec3 rayStart = scene.eye;
+
   cout << ul << ur << ll << lr << endl;
 
   // draw image
@@ -63,12 +65,23 @@ main(int argc, char** argv)
   {
     for (int x = 0; x < width; x++)
     {
-      //cout << ul+dh*x+dv*y << endl;
-      image[x*width + y].r = (1.0/height)*y;
-      image[x*width + y].g = (1.0/width)*x;
-      float a = 1.0*y/height;
-      float b = 1.0*x/height;
-      image[x*width + y].b = ((y/3)%2==0 && (x/5)%2==0 && a*b < 0.30  ? (1.0/height)*(height-y) : 0);
+      vec3 pixelPos = ul+dh*x+dv*y;
+      vec3 rayDir = (pixelPos-rayStart).normalize();
+
+      image[x*height + y] = scene.bkgcolor;
+
+      vec3 intersect;
+      float t = 10000000.0;
+      for (int f = 0; f < scene.spheres.size(); f++) {
+	float newt;
+	if (scene.spheres[f].intersectRay(rayStart, rayDir, intersect, newt))
+	{
+	  if (newt > 0 && newt < t) {
+	    image[x*height + y] = scene.spheres[f].mtlcolor;
+	    t = newt;
+	  }
+	}
+      }
     }
   }
 
@@ -85,9 +98,9 @@ main(int argc, char** argv)
   {
     for (int x = 0; x < width; x++)
     {
-      output << " " << (int)(255*image[x*width + y].r);
-      output << " " << (int)(255*image[x*width + y].g);
-      output << " " << (int)(255*image[x*width + y].b);
+      output << " " << (int)(255*image[x*height + y].r);
+      output << " " << (int)(255*image[x*height + y].g);
+      output << " " << (int)(255*image[x*height + y].b);
       pixelCount++;
       if (pixelCount% 5 == 0)
       {
