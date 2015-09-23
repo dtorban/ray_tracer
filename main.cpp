@@ -17,21 +17,6 @@ using namespace std;
 int
 main(int argc, char** argv)
 {
-  vec3 v;
-  v.x = 1;
-  v.y = 2;
-  v.z = 3;
-  vec2 v2;
-  v2.x = 5;
-  v2.y = 6;
-  v+=v2;
-  cout << v[2] << " " << v2 << " " << v.normalize() << " " << v*v << endl;
-
-  vec3 a(1,0,0);
-  vec3 b(0,1,0);
-  vec3 c = b.cross(a);
-  cout << c << endl;
-
   // Use default file names if none are passed in
   string fileName = "input.txt";
   string outputFileName = "output.ppm";
@@ -48,6 +33,52 @@ main(int argc, char** argv)
   Scene scene;
   SceneParser parser;
   parser.parse(fileName, scene);
+
+  int height = scene.imsize.x;
+  int width = scene.imsize.y;
+
+  vec3* image = new vec3[(int)(width*height)];
+
+  // draw image
+  for (int y = 0; y < height; y++)
+  {
+    for (int x = 0; x < width; x++)
+    {
+      image[x*width + y].r = (y*255/height);
+      image[x*width + y].g = (x*255/width);
+      float a = 1.0*y/height;
+      float b = 1.0*x/height;
+      image[x*width + y].b = ((y/3)%2==0 && (x/5)%2==0 && a*b < 0.30  ? (height-y)*255/height : 0);
+    }
+  }
+
+  // Output header information
+  fstream output;
+  output.open(outputFileName.c_str(), ios::out);
+  output << "P3" << endl;
+  output << width << " " << height << endl;
+  output << 255 << endl;
+
+  // Output pixels
+  int pixelCount = 0;
+  for (int y = 0; y < height; y++)
+  {
+    for (int x = 0; x < width; x++)
+    {
+      output << " " << image[x*width + y].r;
+      output << " " << image[x*width + y].g;
+      output << " " << image[x*width + y].b;
+      pixelCount++;
+      if (pixelCount% 5 == 0)
+      {
+	output << endl;
+      }
+    }
+  }
+
+  output.close();
+
+  delete[] image;
 
   /*  // Get file size
   file.seekg(0, ios::end);

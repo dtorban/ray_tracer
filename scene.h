@@ -2,6 +2,8 @@
 #define SCENE_H
 
 #include "vec.h"
+#include "sphere.h"
+#include <vector>
 
 struct Scene
 {
@@ -12,6 +14,8 @@ struct Scene
   vec2 imsize;
 
   vec3 bkgcolor;
+
+  std::vector<Sphere> spheres;
 };
 
 #endif

@@ -77,6 +77,10 @@ bool SceneParser::parse(const std::string& fileName, Scene& scene) {
 		{
 		  float radius = atof(token.c_str());
 		  cout << " " << radius;
+
+		  Sphere sphere(pos, radius);
+		  sphere.mtlcolor = mtlcolor;
+		  scene.spheres.push_back(sphere);
 		}
 	      else
 		{
