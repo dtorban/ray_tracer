@@ -1,9 +1,12 @@
+// Includes the vector math needed for various calculations
+
 #ifndef VEC_H_
 #define VEC_H_
 
 #include <iostream>
 #include <cmath>
 
+// Base vector class with most of the implementation
 template <typename T>
 class vec
 {
@@ -38,6 +41,7 @@ protected:
   void div(const T& val);
 };
 
+// 2 dimensional vector class
 template <typename T>
 class v2 : public vec<T>
 {
@@ -65,6 +69,7 @@ public:
   v2<T> operator/(const T& v) { v2<T> vec(*this); vec/=v; return vec; }
 };
 
+// 3 dimensional vector class
 template <typename T>
 class v3 : public v2<T>
 {
@@ -94,6 +99,7 @@ public:
   v3<T> cross(const v3<T>& v) const;
 };
 
+// 4 dimensional vector class
 template <typename T>
 class v4 : public v3<T>
 {

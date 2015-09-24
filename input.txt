@@ -1,13 +1,23 @@
+# Eye position
 eye  0.0 0.0 5.0
+# View direction
 viewdir  0.0 0.0 -1.0
+# Up direction
 updir  0.0 1.0 0.0
+# Horizontal field of view
 fovh  90.0
+# Image size / resolution
 imsize  500 500
 
+# Background color
 bkgcolor 0.0 0.0 0.0
 
+# Material color for following spheres
 mtlcolor  1.0 0.0 0.0
+# List of spheres specifying 3D position & radius
 sphere  0.0 0.0 -10.0 4.0
+
+# New color with new set of spheres
 mtlcolor  0.0 1.0 0.0
 sphere  0.5 0.0 -5.0 1.0
 sphere  -0.5 3.0 -5.0 1.0

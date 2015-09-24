@@ -14,6 +14,7 @@ SceneParser::~SceneParser() {}
 
 bool validateLength(const string& name, const vec3& v)
 {
+  // Ensure that the length is greater than zero
   if (v.length() == 0)
     {
       cout << name << " must have a length greater than 0" << endl;
@@ -35,6 +36,7 @@ bool SceneParser::parse(const std::string& fileName, Scene& scene) {
   bool isValid = true;
   vec3 mtlcolor;
 
+  // Read each line from the file and parse tokens
   std::string   line;
   while(std::getline(file,line) && isValid)
     {
@@ -42,6 +44,7 @@ bool SceneParser::parse(const std::string& fileName, Scene& scene) {
       std::string token;
       while(lineStream >> token)
 	{
+	  // Parse tokens
 	  if (token == "eye")
 	    {
 	      isValid = parseVec(token, lineStream, scene.eye);
@@ -91,6 +94,7 @@ bool SceneParser::parse(const std::string& fileName, Scene& scene) {
 	    }
 	  else if (token == "sphere")
 	    {
+	      // Create sphere
 	      vec3 pos;
 	      isValid = parseVec(token, lineStream, pos);
 	      if(lineStream >> token)
