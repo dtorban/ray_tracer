@@ -12,6 +12,16 @@ SceneParser::SceneParser() {
 
 SceneParser::~SceneParser() {}
 
+bool validateLength(const string& name, const vec3& v)
+{
+  if (v.length() == 0)
+    {
+      cout << name << " must have a length greater than 0" << endl;
+      return false;
+    }
+  return true;
+}
+
 bool SceneParser::parse(const std::string& fileName, Scene& scene) {
   // Open file if exists
   ifstream file;
@@ -19,7 +29,7 @@ bool SceneParser::parse(const std::string& fileName, Scene& scene) {
   if (!file)
   {
     cout << "Could not find file: " << fileName << "\n" <<endl;
-    return 0;
+    return false;
   }
 
   bool isValid = true;
@@ -32,51 +42,60 @@ bool SceneParser::parse(const std::string& fileName, Scene& scene) {
       std::string token;
       while(lineStream >> token)
 	{
-	  cout << token << " ";
 	  if (token == "eye")
 	    {
-	      isValid = parseVec(lineStream, scene.eye);
+	      isValid = parseVec(token, lineStream, scene.eye);
 	    }
 	  else if (token == "viewdir")
 	    {
-	      isValid = parseVec(lineStream, scene.viewdir);
+	      isValid = parseVec(token, lineStream, scene.viewdir);
+	      isValid = isValid && validateLength(token, scene.viewdir);
 	    }
 	  else if (token == "updir")
 	    {
-	      isValid = parseVec(lineStream, scene.updir);
+	      isValid = parseVec(token, lineStream, scene.updir);
+	      isValid = isValid && validateLength(token, scene.updir);
 	    }
 	  else if (token == "fovh")
 	    {
 	      if(lineStream >> token)
 		{
 		  scene.fovh = atof(token.c_str());
-		  cout << scene.fovh;
+		  if (scene.fovh <= 0 || scene.fovh >= 180)
+		    {
+		      cout << token << " must be between 0 and 180." << endl;
+		      isValid = false;
+		    }
 		}
 	      else
 		{
-		  return false;
+		  cout << "Missing fovh value." << endl;
+		  isValid = false;
 		}
 	    }
 	  else if (token == "imsize")
 	    {
-	      isValid = parseVec(lineStream, scene.imsize);
+	      isValid = parseVec(token, lineStream, scene.imsize);
+	      if (scene.imsize.x < 0 || scene.imsize.y < 0) {
+		cout << "imsize must have positive width and height." << endl;
+		isValid = false;
+	      }
 	    }
 	  else if (token == "bkgcolor")
 	    {
-	      isValid = parseVec(lineStream, scene.bkgcolor);
+	      isValid = parseVec(token, lineStream, scene.bkgcolor);
 	    }
 	  else if (token == "mtlcolor")
 	    {
-	      isValid = parseVec(lineStream, mtlcolor);
+	      isValid = parseVec(token, lineStream, mtlcolor);
 	    }
 	  else if (token == "sphere")
 	    {
 	      vec3 pos;
-	      isValid = parseVec(lineStream, pos);
+	      isValid = parseVec(token, lineStream, pos);
 	      if(lineStream >> token)
 		{
 		  float radius = atof(token.c_str());
-		  cout << " " << radius;
 
 		  Sphere sphere(pos, radius);
 		  sphere.mtlcolor = mtlcolor;
@@ -84,10 +103,10 @@ bool SceneParser::parse(const std::string& fileName, Scene& scene) {
 		}
 	      else
 		{
-		  return false;
+		  cout << "Missing sphere radius." << endl;
+		  isValid = false;
 		}
 	    }
-	  cout << endl;
 	}
     }
 

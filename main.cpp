@@ -33,7 +33,9 @@ main(int argc, char** argv)
 
   Scene scene;
   SceneParser parser;
-  parser.parse(fileName, scene);
+  if (!parser.parse(fileName, scene)) {
+    return 1;
+  }
 
   int height = scene.imsize.x;
   int width = scene.imsize.y;
@@ -52,13 +54,11 @@ main(int argc, char** argv)
   vec3 ul = scene.eye + n*d + v*(h/2.0f) - u*(w/2.0f);
   vec3 ur = scene.eye + n*d + v*(h/2.0f) + u*(w/2.0f);
   vec3 ll = scene.eye + n*d - v*(h/2.0f) - u*(w/2.0f);
-  vec3 lr = scene.eye + n*d - v*(h/2.0f) + u*(w/2.0f);
+  //vec3 lr = scene.eye + n*d - v*(h/2.0f) + u*(w/2.0f);
   vec3 dh = (ur - ul)/(1.0f*width-1.0f);
   vec3 dv = (ll - ul)/(1.0f*height-1.0f);
 
   vec3 rayStart = scene.eye;
-
-  cout << ul << ur << ll << lr << endl;
 
   // draw image
   for (int y = 0; y < height; y++)
@@ -71,14 +71,16 @@ main(int argc, char** argv)
       image[x*height + y] = scene.bkgcolor;
 
       vec3 intersect;
-      float t = 10000000.0;
+      bool hasValue = false;
+      float t = 0.0;
       for (int f = 0; f < scene.spheres.size(); f++) {
 	float newt;
 	if (scene.spheres[f].intersectRay(rayStart, rayDir, intersect, newt))
 	{
-	  if (newt > 0 && newt < t) {
+	  if (newt > 0 && (newt < t || !hasValue)) {
 	    image[x*height + y] = scene.spheres[f].mtlcolor;
 	    t = newt;
+	    hasValue = true;
 	  }
 	}
       }
