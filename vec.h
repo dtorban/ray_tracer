@@ -104,7 +104,7 @@ template <typename T>
 class v4 : public v3<T>
 {
 public:
-  union {T t, a;};
+  union {T t, w, a;};
 
   v4() : v3<T>() { t = 0; }
   v4(T xval, T yval, T zval, T tval) : v3<T>(xval, yval, zval) { t = tval; }

@@ -4,6 +4,7 @@
 #include "vec.h"
 #include "sphere.h"
 #include <vector>
+#include "light.h"
 
 struct Scene
 {
@@ -16,6 +17,7 @@ struct Scene
   vec3 bkgcolor;
 
   std::vector<Sphere> spheres;
+  std::vector<Light> lights;
 };
 
 #endif
