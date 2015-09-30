@@ -2,6 +2,7 @@
 #define SPHERE_H_
 
 #include "vec.h"
+#include "material.h"
 
 class Sphere
 {
@@ -11,7 +12,7 @@ public:
 
   vec3 pos;
   float r;
-  vec3 mtlcolor;
+  Material material;
 
   bool intersectRay(const vec3& start, const vec3& dir, vec3& intersect, float& t);
 };

@@ -15,6 +15,8 @@
 
 using namespace std;
 
+vec3 shadeRay();
+
 int
 main(int argc, char** argv)
 {
@@ -87,7 +89,7 @@ main(int argc, char** argv)
 	{
 	  // If value is closer set pixel to this sphere color
 	  if (newt > 0 && (newt < t || !hasValue)) {
-	    image[x*height + y] = scene.spheres[f].mtlcolor;
+	    image[x*height + y] = scene.spheres[f].material.objectColor;
 	    t = newt;
 	    hasValue = true;
 	  }
@@ -125,4 +127,9 @@ main(int argc, char** argv)
   delete[] image;
 
   return 0;
+}
+
+vec3 shadeRay()
+{
+  return 0.0f;
 }

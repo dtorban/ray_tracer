@@ -4,6 +4,7 @@
 #include <fstream>
 #include <string>
 #include "scene.h"
+#include "material.h"
 
 using namespace std;
 
@@ -34,7 +35,7 @@ bool SceneParser::parse(const std::string& fileName, Scene& scene) {
   }
 
   bool isValid = true;
-  vec3 mtlcolor;
+  Material material;
 
   // Read each line from the file and parse tokens
   std::string   line;
@@ -66,7 +67,7 @@ bool SceneParser::parse(const std::string& fileName, Scene& scene) {
 		  scene.fovh = atof(token.c_str());
 		  if (scene.fovh <= 0 || scene.fovh >= 180)
 		    {
-		      cout << token << " must be between 0 and 180." << endl;
+		      cout << "fovh must be between 0 and 180." << endl;
 		      isValid = false;
 		    }
 		}
@@ -90,7 +91,26 @@ bool SceneParser::parse(const std::string& fileName, Scene& scene) {
 	    }
 	  else if (token == "mtlcolor")
 	    {
-	      isValid = parseVec(token, lineStream, mtlcolor);
+	      isValid = parseVec(token, lineStream, material.objectColor);
+	      isValid = isValid && validateLength(token, material.objectColor);
+	      isValid = parseVec(token, lineStream, material.specularColor);
+	      isValid = isValid && validateLength(token, material.specularColor);
+	      isValid = parseVec(token, lineStream, material.k);
+	      isValid = isValid && validateLength(token, material.k);
+	      if(lineStream >> token)
+		{
+		  material.n = atof(token.c_str());
+                    if (scene.fovh < 1)
+		    {
+		      cout << "Material n must be greater than 0." << endl;
+		      isValid = false;
+		    }
+		}
+	      else
+		{
+		  cout << "Missing material n value." << endl;
+		  isValid = false;
+		}
 	    }
 	  else if (token == "sphere")
 	    {
@@ -102,7 +122,7 @@ bool SceneParser::parse(const std::string& fileName, Scene& scene) {
 		  float radius = atof(token.c_str());
 
 		  Sphere sphere(pos, radius);
-		  sphere.mtlcolor = mtlcolor;
+		  sphere.material = material;
 		  scene.spheres.push_back(sphere);
 		}
 	      else

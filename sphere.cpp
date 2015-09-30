@@ -31,7 +31,7 @@ bool Sphere::intersectRay(const vec3& start, const vec3& dir, vec3& intersect, f
   intersect = start + dir*t;
 
   // If discrinament is zero, return anser
-  if (disc == 0)
+  if (disc < 0.0001 && disc > -0.0001)
   {
     t = t1;
     return true;
