@@ -15,7 +15,7 @@
 
 using namespace std;
 
-vec3 shadeRay();
+vec3 shadeRay(const Scene& scene, const vec3& pos, const vec3& normal, const Material& material);
 
 int
 main(int argc, char** argv)
@@ -89,7 +89,8 @@ main(int argc, char** argv)
 	{
 	  // If value is closer set pixel to this sphere color
 	  if (newt > 0 && (newt < t || !hasValue)) {
-	    image[x*height + y] = scene.spheres[f].material.objectColor;
+	    Sphere& sphere = scene.spheres[f];
+	    image[x*height + y] = shadeRay(scene, intersect, (intersect-sphere.pos).normalize(), sphere.material);
 	    t = newt;
 	    hasValue = true;
 	  }
@@ -129,7 +130,11 @@ main(int argc, char** argv)
   return 0;
 }
 
-vec3 shadeRay()
+vec3 shadeRay(const Scene& scene, const vec3& pos, const vec3& normal, const Material& material)
 {
-  return 0.0f;
+  vec3 L = scene.lights[0].getDirectionTo(pos).normalize();
+  vec3 H = (L-scene.viewdir.normalize()).normalize();
+  return material.objectColor*material.k.x 
+    + material.objectColor*max(0.0f, normal.dot(L))*material.k.y
+    + material.specularColor*pow(max(0.0f, normal.dot(H)),material.n)*material.k.z;
 }

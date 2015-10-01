@@ -134,8 +134,9 @@ bool SceneParser::parse(const std::string& fileName, Scene& scene) {
 	  else if (token == "light") {
 	    vec4 v;
 	    isValid = parseVec(token, lineStream, v);
-	    vec4 color;
+	    vec3 color;
 	    isValid = parseVec(token, lineStream, color);
+	    isValid = isValid && validateLength(token, color);
 	    bool directional = v.w < 1.0001 && v.w > 0.99999;
 	    Light light(v, color, directional);
 	    scene.lights.push_back(light);

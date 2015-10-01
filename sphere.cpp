@@ -27,7 +27,7 @@ bool Sphere::intersectRay(const vec3& start, const vec3& dir, vec3& intersect, f
   }
   
   // Calculate first solution of quadratic formula
-  float t1 = -b+sqrt(disc);
+  float t1 = (-b+sqrt(disc))/(2.0f*a);
   intersect = start + dir*t;
 
   // If discrinament is zero, return anser
@@ -38,7 +38,7 @@ bool Sphere::intersectRay(const vec3& start, const vec3& dir, vec3& intersect, f
   }
 
   // If discrimanent is greater than zero, return closest answer
-  float t2 = -b-sqrt(disc);
+  float t2 = (-b-sqrt(disc))/(2.0f*a);
   if (t2 < t1)
   {
     t = t2;

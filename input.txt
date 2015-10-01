@@ -9,15 +9,18 @@ fovh  90.0
 # Image size / resolution
 imsize  500 500
 
+# Light
+light 0.0 -0.75 -1.0 1 1.0 1.0 1.0
 # Background color
 bkgcolor 0.0 0.0 0.0
 
 # Material color for following spheres
-mtlcolor  1.0 0.0 0.0 1.0 1.0 1.0 0.1 0.5 0.4 1.0
+mtlcolor  1.0 0.0 0.0 1.0 1.0 1.0 0.2 0.7 0.3 10.0
 # List of spheres specifying 3D position & radius
 sphere  0.0 0.0 -10.0 4.0
+#sphere 0.0 1.0 0.0 1.0
 
 # New color with new set of spheres
-mtlcolor  0.0 1.0 0.0 1.0 1.0 1.0 0.1 0.5 0.4 1.0
+mtlcolor  0.0 1.0 0.0 1.0 1.0 1.0 0.2 0.7 0.3 10.0
 sphere  0.5 0.0 -5.0 1.0
 sphere  -0.5 3.0 -5.0 1.0

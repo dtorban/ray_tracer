@@ -1,11 +1,12 @@
 #include "light.h"
+#include <iostream>
 
-vec3 Light::getDirectionTo(const vec3& pos)
+vec3 Light::getDirectionTo(const vec3& pos) const
 {
   if (_directional) {
-    return _v;
+    return _v.normalize()*-1.0f;
   }
   else {
-    return _v-pos;
+    return (_v-pos).normalize();
   }
 }
