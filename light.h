@@ -9,6 +9,7 @@ public:
   virtual ~Light() {}
 
   vec3 getDirectionTo(const vec3 &pos) const;
+  bool isBetweenLight(const vec3 &pos, float dist) const;
   vec3 getColor() const { return _color; }
 
 private:

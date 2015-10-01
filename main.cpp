@@ -146,9 +146,9 @@ vec3 shadeRay(const Scene& scene, const vec3& pos, const vec3& normal, const Mat
     float t;
     for (int f = 0; f < scene.spheres.size(); f++) {
       const Sphere& sphere = scene.spheres[f];
-      if (sphere.intersectRay(pos, L, intersect, t) && t > 0.00001)
+      if (sphere.intersectRay(pos, L, intersect, t) && t > 0.01 && light.isBetweenLight(pos, t))
       {
-	includeLight = false;
+       	includeLight = false;
 	break;
       }
     }
