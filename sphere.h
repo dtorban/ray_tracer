@@ -14,7 +14,7 @@ public:
   float r;
   Material material;
 
-  bool intersectRay(const vec3& start, const vec3& dir, vec3& intersect, float& t);
+  bool intersectRay(const vec3& start, const vec3& dir, vec3& intersect, float& t) const;
 };
 
 #endif

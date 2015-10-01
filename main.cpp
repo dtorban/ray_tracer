@@ -132,9 +132,37 @@ main(int argc, char** argv)
 
 vec3 shadeRay(const Scene& scene, const vec3& pos, const vec3& normal, const Material& material)
 {
-  vec3 L = scene.lights[0].getDirectionTo(pos).normalize();
-  vec3 H = (L-scene.viewdir.normalize()).normalize();
-  return material.objectColor*material.k.x 
-    + material.objectColor*max(0.0f, normal.dot(L))*material.k.y
-    + material.specularColor*pow(max(0.0f, normal.dot(H)),material.n)*material.k.z;
+  // Caluculate diffuse and specular
+  vec3 diffSpec(0.0f);
+
+  for (int f = 0; f < scene.lights.size(); f++) {
+    Light light = scene.lights[f];
+    vec3 L = light.getDirectionTo(pos).normalize();
+    vec3 H = (L-scene.viewdir.normalize()).normalize();
+
+    bool includeLight = true;
+
+    vec3 intersect;
+    float t;
+    for (int f = 0; f < scene.spheres.size(); f++) {
+      const Sphere& sphere = scene.spheres[f];
+      if (sphere.intersectRay(pos, L, intersect, t) && t > 0.00001)
+      {
+	includeLight = false;
+	break;
+      }
+    }
+
+    if (includeLight) {
+      diffSpec += light.getColor()*(material.objectColor*max(0.0f, normal.dot(L))*material.k.y + material.specularColor*pow(max(0.0f, normal.dot(H)),material.n)*material.k.z);
+    }
+  }
+
+  vec3 I = material.objectColor*material.k.x + diffSpec;
+
+  // Clamp I
+  I.x = min(1.0f, I.x);
+  I.y = min(1.0f, I.y);
+  I.z = min(1.0f, I.z);
+  return I;
 }
