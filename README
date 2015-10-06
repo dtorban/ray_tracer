@@ -1,7 +1,6 @@
-Dan Orban - CSCI 5607 - Assignment 0
+Dan Orban - CSCI 5607 - Assignment 1b
 
-This program takes an imput file with "imsize width height" as its first line 
-and outputs a PPM file of width and height with a pattern.
+This program takes an imput file and outputs a PPM file of width and height.
 
 Build the program with make.
 
@@ -11,16 +10,33 @@ Program usage:
 Example input file:
 	# Eye position
 	eye  0.0 0.0 5.0
-	# 
+	# View direction
 	viewdir  0.0 0.0 -1.0
+	# Up direction
 	updir  0.0 1.0 0.0
+	# Horizontal field of view
 	fovh  90.0
+	# Image size / resolution
 	imsize  500 500
 
+	# Lights x y z w lr lg lb n
+	light 0.0 -0.75 -1.0 0 0.33 0.33 0.33
+	light -1.0 0.0 0.0 0 0.33 0.33 0.33
+	light 5.0 2.0 -9.0 1 0.33 0.33 0.33
+
+	# Background color
 	bkgcolor 0.0 0.0 0.0
 
-	mtlcolor  1.0 0.0 0.0
+	# Material color for following spheres
+	# dr dg db sr sg sb ka kd ks n
+	mtlcolor  1.0 0.0 0.0 1.0 1.0 1.0 0.2 0.7 0.5 50.0
+	# List of spheres specifying 3D position & radius
 	sphere  0.0 0.0 -10.0 4.0
-	mtlcolor  0.0 1.0 0.0
+	#sphere 0.0 1.0 0.0 1.0
+
+	# New color with new set of spheres
+	mtlcolor  0.0 1.0 0.0 1.0 1.0 1.0 0.2 0.7 0.5 100.0
 	sphere  0.5 0.0 -5.0 1.0
 	sphere  -0.5 3.0 -5.0 1.0
+	sphere  7.0 2.0 -8.0 1.0
+
