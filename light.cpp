@@ -3,7 +3,7 @@
 
 vec3 Light::getDirectionTo(const vec3& pos) const
 {
-  if (_directional) {
+  if (!_directional) {
     return _v.normalize()*-1.0f;
   }
   else {
@@ -13,5 +13,5 @@ vec3 Light::getDirectionTo(const vec3& pos) const
 
 bool Light::isBetweenLight(const vec3 &pos, float dist) const
 {
-  return _directional ? true : (_v-pos).length() > dist;
+  return !_directional ? true : (_v-pos).length() > dist;
 }
