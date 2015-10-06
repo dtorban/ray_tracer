@@ -5,13 +5,13 @@ viewdir  0.0 0.0 -1.0
 # Up direction
 updir  0.0 1.0 0.0
 # Horizontal field of view
-fovh  90.0
+fovh  135.0
 # Image size / resolution
 imsize  500 500
 
-light 0.0 -0.75 -1.0 1 0.33 0.33 0.33
-light -1.0 0.0 0.0 1 0.33 0.33 0.33
-light 5.0 2.0 -9.0 0 0.33 0.33 0.33
+light 0.0 -0.75 -1.0 0 0.33 0.33 0.33
+light -1.0 0.0 0.0 0 0.33 0.33 0.33
+light 5.0 2.0 -9.0 1 0.33 0.33 0.33
 
 # Background color
 bkgcolor 0.1 0.3 0.4

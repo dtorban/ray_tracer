@@ -54,11 +54,13 @@ bool SceneParser::parse(const std::string& fileName, Scene& scene) {
 	    {
 	      isValid = parseVec(token, lineStream, scene.viewdir);
 	      isValid = isValid && validateLength(token, scene.viewdir);
+	      if(isValid) scene.viewdir = scene.viewdir.normalize();
 	    }
 	  else if (token == "updir")
 	    {
 	      isValid = parseVec(token, lineStream, scene.updir);
 	      isValid = isValid && validateLength(token, scene.updir);
+	      if(isValid) scene.updir = scene.updir.normalize();
 	    }
 	  else if (token == "fovh")
 	    {
