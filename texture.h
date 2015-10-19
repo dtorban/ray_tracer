@@ -10,8 +10,13 @@ public:
   virtual ~Texture() { if (_image != NULL) delete[] _image; }
 
   bool load(const std::string& filepath);
+  const vec3 getValue(float u, float v);
+
+protected:
+  const vec3 getPixelValue(int x, int y);
 
 private:
+  int _width, _height;
   vec3* _image;
 };
 
