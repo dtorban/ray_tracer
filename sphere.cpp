@@ -11,8 +11,10 @@ Sphere::~Sphere()
 {
 }
 
-bool Sphere::intersectRay(const vec3& start, const vec3& dir, vec3& intersect, float& t) const
+bool Sphere::intersectRay(const vec3& start, const vec3& dir, vec3& intersect, float& t, const GraphicsObject*& obj) const
 {
+  obj = this;
+
   // Calculate a, b, and c for quadratic formula
   float a = 1;
   vec3 dist = start-pos;

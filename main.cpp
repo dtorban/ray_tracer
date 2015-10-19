@@ -96,11 +96,11 @@ main(int argc, char** argv)
       float t = 0.0;
       for (int f = 0; f < scene.objects.size(); f++) {
 	float newt;
-	if (scene.objects[f]->intersectRay(rayStart, rayDir, intersect, newt))
+	const GraphicsObject* obj;
+        if (scene.objects[f]->intersectRay(rayStart, rayDir, intersect, newt, obj))
 	{
 	  // If value is closer set pixel to this sphere color
 	  if (newt > 0 && (newt < t || !hasValue)) {
-	    GraphicsObject* obj = scene.objects[f];
             vec3 normal = obj->getNormal(intersect);
 	    Material mtl = obj->getMaterial(intersect);
 	    image[x*height + y] = shadeRay(scene, intersect, normal, mtl);
@@ -161,7 +161,7 @@ vec3 shadeRay(const Scene& scene, const vec3& pos, const vec3& normal, const Mat
     float t;
     for (int f = 0; f < scene.objects.size(); f++) {
       const GraphicsObject* obj = scene.objects[f];
-      if (obj->intersectRay(pos, L, intersect, t) && t > 0.01 && light.isBetweenLight(pos, t))
+      if (obj->intersectRay(pos, L, intersect, t, obj) && t > 0.01 && light.isBetweenLight(pos, t))
       {
        	includeLight = false;
 	break;
