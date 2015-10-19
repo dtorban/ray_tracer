@@ -53,11 +53,16 @@ main(int argc, char** argv)
 
   // Calculate viewing window
   float aspectRatio = (1.0*height)/width;
-  float d = 1.0f;
+  float d = 10.0f;
 #define PI 3.14159265359
   float w = 2.0*d*tan(scene.fovh*PI/180.0/2.0);
   float h = w/aspectRatio;
   vec3 n = scene.viewdir.normalize();
+
+   if (scene.isParallel) {
+     d = 0;
+   }
+
   vec3 ul = scene.eye + n*d + v*(h/2.0f) - u*(w/2.0f);
   vec3 ur = scene.eye + n*d + v*(h/2.0f) + u*(w/2.0f);
   vec3 ll = scene.eye + n*d - v*(h/2.0f) - u*(w/2.0f);
@@ -75,6 +80,11 @@ main(int argc, char** argv)
       // Get pixel position
       vec3 pixelPos = ul+dh*x+dv*y;
       vec3 rayDir = (pixelPos-rayStart).normalize();
+
+      if (scene.isParallel) {
+		rayStart = pixelPos;
+		rayDir = n;
+      }
 
       // Set background color
       image[x*height + y] = scene.bkgcolor;

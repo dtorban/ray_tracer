@@ -13,6 +13,7 @@ struct Scene
   vec3 updir;
   float fovh;
   vec2 imsize;
+  bool isParallel;
 
   vec3 bkgcolor;
 

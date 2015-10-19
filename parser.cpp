@@ -34,6 +34,7 @@ bool SceneParser::parse(const std::string& fileName, Scene& scene) {
     return false;
   }
 
+  scene.isParallel = false;
   bool isValid = true;
   Material material;
 
@@ -49,6 +50,10 @@ bool SceneParser::parse(const std::string& fileName, Scene& scene) {
 	  if (token == "eye")
 	    {
 	      isValid = parseVec(token, lineStream, scene.eye);
+	    }
+	  if (token == "parallel")
+	    {
+	      scene.isParallel = true;
 	    }
 	  else if (token == "viewdir")
 	    {
