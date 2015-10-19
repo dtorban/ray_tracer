@@ -5,6 +5,9 @@
 #include "sphere.h"
 #include <vector>
 #include "light.h"
+#include <map>
+#include <string>
+#include "texture.h"
 
 struct Scene
 {
@@ -19,6 +22,7 @@ struct Scene
 
   std::vector<Sphere> spheres;
   std::vector<Light> lights;
+  std::map<std::string, Texture> textures;
 };
 
 #endif

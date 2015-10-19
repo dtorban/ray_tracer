@@ -2,7 +2,7 @@ CXX := g++
 
 CXXFLAGS := -Wall -g -Wno-sign-compare
 
-OBJ := main.o parser.o sphere.o light.o
+OBJ := main.o parser.o sphere.o light.o texture.o
 
 ray_trace: $(OBJ)
 	$(CXX) $^ -o $@ $(LDFLAGS)

@@ -148,6 +148,19 @@ bool SceneParser::parse(const std::string& fileName, Scene& scene) {
 	    Light light(v, color, directional);
 	    scene.lights.push_back(light);
 	  }
+	  else if (token == "texture")
+	    {
+	      if(lineStream >> token)
+		{
+		  scene.textures[token] = Texture();
+		  isValid = scene.textures[token].load(token);
+		}
+	      else
+		{
+		  cout << "Missing texture file path." << endl;
+		  isValid = false;
+		}
+	    }
 	}
     }
 
