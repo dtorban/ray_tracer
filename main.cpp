@@ -116,15 +116,17 @@ main(int argc, char** argv)
   output << width << " " << height << endl;
   output << 255 << endl;
 
+  vec3* outImage = image;
+
   // Output pixels
   int pixelCount = 0;
   for (int y = 0; y < height; y++)
   {
     for (int x = 0; x < width; x++)
     {
-      output << " " << (int)(255*image[x*height + y].r);
-      output << " " << (int)(255*image[x*height + y].g);
-      output << " " << (int)(255*image[x*height + y].b);
+      output << " " << (int)(255*outImage[x*height + y].r);
+      output << " " << (int)(255*outImage[x*height + y].g);
+      output << " " << (int)(255*outImage[x*height + y].b);
       pixelCount++;
       if (pixelCount% 5 == 0)
       {

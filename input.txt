@@ -11,7 +11,7 @@ imsize  500 500
 # Parallel projection
 #parallel
 
-texture spiralt.ppm
+texture spiral.ppm
 
 # Lights
 #light 0.0 -0.75 -1.0 1 0.5 0.5 0.5
