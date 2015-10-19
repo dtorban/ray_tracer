@@ -5,8 +5,9 @@
 #include "material.h"
 #include <string>
 #include "texture.h"
+#include "graphics_object.h"
 
-class Sphere
+class Sphere : public GraphicsObject
 {
 public:
   Sphere(vec3 position, float radius);
@@ -18,7 +19,8 @@ public:
   Texture *texture;
 
   bool intersectRay(const vec3& start, const vec3& dir, vec3& intersect, float& t) const;
-  vec3 getColor(const vec3& normal);
+  Material getMaterial(const vec3& intersect) const;
+  vec3 getNormal(const vec3& intersect) const;
 };
 
 #endif

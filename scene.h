@@ -8,9 +8,18 @@
 #include <map>
 #include <string>
 #include "texture.h"
+#include "material.h"
+#include "graphics_object.h"
 
 struct Scene
 {
+  ~Scene()
+  {
+    for (int f = 0; f < objects.size(); f++) {
+      delete objects[f];
+    }
+  }
+
   vec3 eye;
   vec3 viewdir;
   vec3 updir;
@@ -20,7 +29,7 @@ struct Scene
 
   vec3 bkgcolor;
 
-  std::vector<Sphere> spheres;
+  std::vector<GraphicsObject*> objects;
   std::vector<Light> lights;
   std::map<std::string, Texture> textures;
 };

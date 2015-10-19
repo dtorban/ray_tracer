@@ -94,16 +94,15 @@ main(int argc, char** argv)
       vec3 intersect;
       bool hasValue = false;
       float t = 0.0;
-      for (int f = 0; f < scene.spheres.size(); f++) {
+      for (int f = 0; f < scene.objects.size(); f++) {
 	float newt;
-	if (scene.spheres[f].intersectRay(rayStart, rayDir, intersect, newt))
+	if (scene.objects[f]->intersectRay(rayStart, rayDir, intersect, newt))
 	{
 	  // If value is closer set pixel to this sphere color
 	  if (newt > 0 && (newt < t || !hasValue)) {
-	    Sphere& sphere = scene.spheres[f];
-	    vec3 normal = (intersect-sphere.pos).normalize();
-	    Material mtl = sphere.material;
-	    mtl.objectColor = sphere.getColor(normal);
+	    GraphicsObject* obj = scene.objects[f];
+            vec3 normal = obj->getNormal(intersect);
+	    Material mtl = obj->getMaterial(intersect);
 	    image[x*height + y] = shadeRay(scene, intersect, normal, mtl);
 	    t = newt;
 	    hasValue = true;
@@ -160,9 +159,9 @@ vec3 shadeRay(const Scene& scene, const vec3& pos, const vec3& normal, const Mat
 
     vec3 intersect;
     float t;
-    for (int f = 0; f < scene.spheres.size(); f++) {
-      const Sphere& sphere = scene.spheres[f];
-      if (sphere.intersectRay(pos, L, intersect, t) && t > 0.01 && light.isBetweenLight(pos, t))
+    for (int f = 0; f < scene.objects.size(); f++) {
+      const GraphicsObject* obj = scene.objects[f];
+      if (obj->intersectRay(pos, L, intersect, t) && t > 0.01 && light.isBetweenLight(pos, t))
       {
        	includeLight = false;
 	break;

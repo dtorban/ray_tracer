@@ -50,8 +50,9 @@ bool Sphere::intersectRay(const vec3& start, const vec3& dir, vec3& intersect, f
   return true;
 }
 
-vec3 Sphere::getColor(const vec3& n) {
+Material Sphere::getMaterial(const vec3& intersect) const {
   if (texture != NULL) {
+    vec3 n = getNormal(intersect);
     float theta = atan2(n.x, n.z);
     theta += PI;
     float phi = acos(n.y);
@@ -59,10 +60,16 @@ vec3 Sphere::getColor(const vec3& n) {
     theta -= 2.0f*PI*floor(theta/(2.0f*PI));
     float u = (theta)/(2.0f*PI);
     float v = phi/PI;
-    return texture->getValue(u, v);
+    Material mtl = material;
+    mtl.objectColor = texture->getValue(u, v);
+    return mtl;
   }
   else {
-    return material.objectColor;
+    return material;
   }
 
+}
+
+vec3 Sphere::getNormal(const vec3& intersect) const {
+  return (intersect-pos).normalize();
 }

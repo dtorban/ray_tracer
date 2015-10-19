@@ -129,10 +129,10 @@ bool SceneParser::parse(const std::string& fileName, Scene& scene) {
 		{
 		  float radius = atof(token.c_str());
 
-		  Sphere sphere(pos, radius);
-		  sphere.material = material;
-		  sphere.texture = textureName != "" ? &(scene.textures[textureName]) : NULL;
-		  scene.spheres.push_back(sphere);
+		  Sphere* sphere = new Sphere(pos, radius);
+		  sphere->material = material;
+		  sphere->texture = textureName != "" ? &(scene.textures[textureName]) : NULL;
+		  scene.objects.push_back(sphere);
 		}
 	      else
 		{
