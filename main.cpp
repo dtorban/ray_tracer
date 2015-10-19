@@ -13,6 +13,8 @@
 #include "parser.h"
 #include <cmath>
 
+#define PI 3.14159265359
+
 using namespace std;
 
 vec3 shadeRay(const Scene& scene, const vec3& pos, const vec3& normal, const Material& material);
@@ -54,7 +56,6 @@ main(int argc, char** argv)
   // Calculate viewing window
   float aspectRatio = (1.0*height)/width;
   float d = 10.0f;
-#define PI 3.14159265359
   float w = 2.0*d*tan(scene.fovh*PI/180.0/2.0);
   float h = w/aspectRatio;
   vec3 n = scene.viewdir.normalize();
@@ -100,7 +101,10 @@ main(int argc, char** argv)
 	  // If value is closer set pixel to this sphere color
 	  if (newt > 0 && (newt < t || !hasValue)) {
 	    Sphere& sphere = scene.spheres[f];
-	    image[x*height + y] = shadeRay(scene, intersect, (intersect-sphere.pos).normalize(), sphere.material);
+	    vec3 normal = (intersect-sphere.pos).normalize();
+	    Material mtl = sphere.material;
+	    mtl.objectColor = sphere.getColor(normal);
+	    image[x*height + y] = shadeRay(scene, intersect, normal, mtl);
 	    t = newt;
 	    hasValue = true;
 	  }

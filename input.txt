@@ -11,8 +11,6 @@ imsize  500 500
 # Parallel projection
 #parallel
 
-texture spiral.ppm
-
 # Lights
 #light 0.0 -0.75 -1.0 1 0.5 0.5 0.5
 #light -1.0 0.0 0.0 1 0.5 0.5 0.5
@@ -32,8 +30,12 @@ mtlcolor  1.0 0.0 0.0 1.0 1.0 1.0 0.2 0.7 0.5 50.0
 sphere  0.0 0.0 -10.0 4.0
 #sphere 0.0 1.0 0.0 1.0
 
+texture world.ppm
+
 # New color with new set of spheres
 mtlcolor  0.0 1.0 0.0 1.0 1.0 1.0 0.2 0.7 0.5 100.0
 sphere  0.5 0.0 -5.0 1.0
+texture
 sphere  -0.5 3.0 -5.0 1.0
+texture world.ppm
 sphere  7.0 2.0 -8.0 1.0

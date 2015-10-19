@@ -63,10 +63,10 @@ const vec3 Texture::getValue(float u, float v)
   float alpha = fi-ii;
   float beta = fj-ij;
   
-  return getPixelValue(ij+1,ii+1)*alpha*beta +
-    getPixelValue(ij+1,ii)*(1-alpha)*beta +
-    getPixelValue(ij,ii+1)*(alpha)*(1-beta) +
-    getPixelValue(ij,ii)*(1-alpha)*(1-beta);
+  return getPixelValue(ii+1,ij+1)*alpha*beta +
+    getPixelValue(ii,ij+1)*(1-alpha)*beta +
+    getPixelValue(ii+1,ij)*(alpha)*(1-beta) +
+    getPixelValue(ii,ij)*(1-alpha)*(1-beta);
 }
 
 const vec3 Texture::getPixelValue(int x, int y)

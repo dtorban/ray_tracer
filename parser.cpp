@@ -37,13 +37,14 @@ bool SceneParser::parse(const std::string& fileName, Scene& scene) {
   scene.isParallel = false;
   bool isValid = true;
   Material material;
+  std::string textureName;
 
   // Read each line from the file and parse tokens
   std::string   line;
   while(std::getline(file,line) && isValid)
     {
       std::stringstream lineStream(line);
-      std::string token;
+      std::string token = "";
       while(lineStream >> token)
 	{
 	  // Parse tokens
@@ -130,6 +131,7 @@ bool SceneParser::parse(const std::string& fileName, Scene& scene) {
 
 		  Sphere sphere(pos, radius);
 		  sphere.material = material;
+		  sphere.texture = textureName != "" ? &(scene.textures[textureName]) : NULL;
 		  scene.spheres.push_back(sphere);
 		}
 	      else
@@ -152,13 +154,16 @@ bool SceneParser::parse(const std::string& fileName, Scene& scene) {
 	    {
 	      if(lineStream >> token)
 		{
-		  scene.textures[token] = Texture();
-		  isValid = scene.textures[token].load(token);
+		  textureName = token;
+		  if (scene.textures.find(token) == scene.textures.end())
+		    {
+		      scene.textures[token] = Texture();
+		      isValid = scene.textures[token].load(token);
+		    }
 		}
 	      else
 		{
-		  cout << "Missing texture file path." << endl;
-		  isValid = false;
+		  textureName = "";
 		}
 	    }
 	}

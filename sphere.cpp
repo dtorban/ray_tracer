@@ -1,7 +1,9 @@
 #include "sphere.h"
 #include <cmath>
 
-Sphere::Sphere(vec3 position, float radius) : pos(position), r(radius)
+#define PI 3.14159265359
+
+Sphere::Sphere(vec3 position, float radius) : pos(position), r(radius), texture(NULL)
 {
 }
 
@@ -46,4 +48,21 @@ bool Sphere::intersectRay(const vec3& start, const vec3& dir, vec3& intersect, f
   }
 
   return true;
+}
+
+vec3 Sphere::getColor(const vec3& n) {
+  if (texture != NULL) {
+    float theta = atan2(n.x, n.z);
+    theta += PI;
+    float phi = acos(n.y);
+    if (theta < 0) theta += 2.0f*PI;
+    theta -= 2.0f*PI*floor(theta/(2.0f*PI));
+    float u = (theta)/(2.0f*PI);
+    float v = phi/PI;
+    return texture->getValue(u, v);
+  }
+  else {
+    return material.objectColor;
+  }
+
 }
