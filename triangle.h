@@ -7,10 +7,19 @@
 #include "texture.h"
 #include "graphics_object.h"
 
+class Mesh;
+
+struct VertData
+{
+  int index;
+  int texCoord;
+  int normal; 
+};
+
 class Triangle : public GraphicsObject
 {
 public:
-  Triangle();
+  Triangle(const Mesh* mesh, const VertData& v1, const VertData& v2, const VertData& v3);
   ~Triangle();
 
   Material material;
@@ -19,6 +28,10 @@ public:
   bool intersectRay(const vec3& start, const vec3& dir, vec3& intersect, float& t, const GraphicsObject*& obj) const;
   Material getMaterial(const vec3& intersect) const;
   vec3 getNormal(const vec3& intersect) const;
+
+private:
+  const Mesh* _mesh;
+  VertData _vertData[3];
 };
 
 #endif

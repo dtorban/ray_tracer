@@ -5,6 +5,7 @@
 #include <string>
 #include "scene.h"
 #include "material.h"
+#include "mesh.h"
 
 using namespace std;
 
@@ -38,6 +39,8 @@ bool SceneParser::parse(const std::string& fileName, Scene& scene) {
   bool isValid = true;
   Material material;
   std::string textureName;
+  Mesh* mesh = new Mesh();
+  scene.objects.push_back(mesh);
 
   // Read each line from the file and parse tokens
   std::string   line;
@@ -165,6 +168,28 @@ bool SceneParser::parse(const std::string& fileName, Scene& scene) {
 		{
 		  textureName = "";
 		}
+	    }
+	  else if (token == "v")
+	    {
+	      vec3 vert;
+	      isValid = parseVec(token, lineStream, vert);
+	      mesh->addVertex(vert);
+	    }
+	  else if (token == "vt")
+	    {
+	      vec2 texCoord;
+	      isValid = parseVec(token, lineStream, texCoord);
+	      if (texCoord.x < 0 || texCoord.x > 1 || texCoord.y < 0 || texCoord.y > 0) {
+		isValid = false;
+		cout << "Texture coordinates must be between 0 and 1." << endl;
+	      }
+	      mesh->addTexCoord(texCoord);
+	    }
+	  else if (token == "vn")
+	    {
+	      vec3 normal;
+	      isValid = parseVec(token, lineStream, normal);
+	      mesh->addNormal(normal);
 	    }
 	}
     }
