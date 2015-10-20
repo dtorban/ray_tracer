@@ -14,6 +14,8 @@ SceneParser::SceneParser() {
 
 SceneParser::~SceneParser() {}
 
+bool parseVertexData(const std::string& str, VertData& vertData);
+
 bool validateLength(const string& name, const vec3& v)
 {
   // Ensure that the length is greater than zero
@@ -111,7 +113,7 @@ bool SceneParser::parse(const std::string& fileName, Scene& scene) {
 	      if(lineStream >> token)
 		{
 		  material.n = atof(token.c_str());
-                    if (scene.fovh < 1)
+                    if (material.n < 0)
 		    {
 		      cout << "Material n must be greater than 0." << endl;
 		      isValid = false;
@@ -122,6 +124,9 @@ bool SceneParser::parse(const std::string& fileName, Scene& scene) {
 		  cout << "Missing material n value." << endl;
 		  isValid = false;
 		}
+	      if (isValid) {
+		mesh->material = material;
+	      }
 	    }
 	  else if (token == "sphere")
 	    {
@@ -168,6 +173,9 @@ bool SceneParser::parse(const std::string& fileName, Scene& scene) {
 		{
 		  textureName = "";
 		}
+	      if (isValid) {
+		mesh->texture = textureName != "" ? &(scene.textures[textureName]) : NULL;
+	      }
 	    }
 	  else if (token == "v")
 	    {
@@ -191,10 +199,60 @@ bool SceneParser::parse(const std::string& fileName, Scene& scene) {
 	      isValid = parseVec(token, lineStream, normal);
 	      mesh->addNormal(normal);
 	    }
+	  else if (token == "f")
+	    {
+	      VertData v1, v2, v3;
+	      if(lineStream >> token) {
+		isValid = parseVertexData(token, v1);
+	      }
+	      if(isValid && lineStream >> token) {
+		isValid = parseVertexData(token, v2);
+	      }
+	      if(isValid && lineStream >> token) {
+		isValid = parseVertexData(token, v3);
+	      }
+	      
+	      if (isValid) {
+		mesh->addTriangle(v1, v2, v3);
+	      }
+	      //	      cout << endl;
+	    }
 	}
     }
 
   file.close();
 
   return isValid;
+}
+
+bool parseVertexData(const std::string& str, VertData& vertData) {
+  int found = str.find('/');
+
+  vertData.texCoord = -1;
+  vertData.normal = -1;
+
+  if (found!=std::string::npos) {
+    vertData.index = atof(str.substr(0,found).c_str());
+    
+    string sstr = str.substr(found+1, str.size() - (found + 1));
+    found = sstr.find('/');
+
+    if (found == std::string::npos) {
+      cout << "Vertex face formatted incorrectly." << endl;
+      return false;
+    }
+
+    if (found > 0) {
+      vertData.texCoord = atof(sstr.substr(0,found).c_str());
+    }
+
+    vertData.normal = atof(sstr.substr(found+1,sstr.size() - (found+1)).c_str());
+  }
+  else {
+    vertData.index = atof(str.c_str());
+  }
+
+  //  cout << vertData.index << "/" << vertData.texCoord << "/" << vertData.normal << " ";
+
+  return true;
 }
