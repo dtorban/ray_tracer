@@ -56,6 +56,10 @@ bool Triangle::intersectRay(const vec3& start, const vec3& dir, Intersect& inter
   float r = b*l-k*c;
   float s = a*m+b*n+c*o;
 
+  if (std::abs(s) < 0.0001) {
+    return false;
+  }
+
   t = -(f*p+e*q+d*r)/s;
 
   if (t <= 0) {
@@ -83,7 +87,20 @@ bool Triangle::intersectRay(const vec3& start, const vec3& dir, Intersect& inter
   intersect.material = material;
 
   if (texture != NULL && _hasTextureCoords) {
-    intersect.material.objectColor = baryCoords;
+    vec2 t0 = _mesh->_texCoords[_vertData[0].texCoord-1];
+    vec2 t1 = _mesh->_texCoords[_vertData[1].texCoord-1];
+    vec2 t2 = _mesh->_texCoords[_vertData[2].texCoord-1];
+    float u =alpha*t0.x + beta*t1.x + gama*t2.x;
+    float v =alpha*t0.y + beta*t1.y + gama*t2.y;
+    intersect.material.objectColor = texture->getValue(u, v);
+  }
+
+  if (_hasNormals) {
+    vec3 n0 = _mesh->_normals[_vertData[0].normal-1];
+    vec3 n1 = _mesh->_normals[_vertData[1].normal-1];
+    vec3 n2 = _mesh->_normals[_vertData[2].normal-1];
+    vec3 normal =n0*alpha + n1*beta + n2*gama;
+    intersect.normal = normal.normalize();
   }
 
   return true;

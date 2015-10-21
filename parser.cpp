@@ -182,13 +182,12 @@ bool SceneParser::parse(const std::string& fileName, Scene& scene) {
 	      vec3 vert;
 	      isValid = parseVec(token, lineStream, vert);
 	      mesh->addVertex(vert);
-	      std::cout << vert << std::endl;
 	    }
 	  else if (token == "vt")
 	    {
 	      vec2 texCoord;
 	      isValid = parseVec(token, lineStream, texCoord);
-	      if (texCoord.x < 0 || texCoord.x > 1 || texCoord.y < 0 || texCoord.y > 0) {
+	      if (texCoord.x < 0.0f || texCoord.x > 1.0f || texCoord.y < 0.0f || texCoord.y > 1.0f) {
 		isValid = false;
 		cout << "Texture coordinates must be between 0 and 1." << endl;
 	      }
