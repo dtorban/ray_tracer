@@ -62,7 +62,7 @@ bool Triangle::intersectRay(const vec3& start, const vec3& dir, Intersect& inter
 
   t = -(f*p+e*q+d*r)/s;
 
-  if (t <= 0) {
+  if (t < 0.01) {
     return false;
   }
 
@@ -79,8 +79,6 @@ bool Triangle::intersectRay(const vec3& start, const vec3& dir, Intersect& inter
   }
 
   float alpha = 1 - (beta + gama);
-
-  vec3 baryCoords = vec3(alpha, beta, gama);
 
   intersect.point = start + dir*t;
   intersect.normal = _normal;

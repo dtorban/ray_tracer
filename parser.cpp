@@ -237,8 +237,10 @@ bool parseVertexData(const std::string& str, VertData& vertData) {
     string sstr = str.substr(found+1, str.size() - (found + 1));
     found = sstr.find('/');
 
-    if (found > 0) {
-      vertData.texCoord = atof(sstr.substr(0,found).c_str());
+    if (found!=std::string::npos) {
+      if (found > 0) {
+        vertData.texCoord = atof(sstr.substr(0,found).c_str());
+      }
       vertData.normal = atof(sstr.substr(found+1,sstr.size() - (found+1)).c_str());
     }
     else {
