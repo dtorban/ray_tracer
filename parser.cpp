@@ -238,16 +238,15 @@ bool parseVertexData(const std::string& str, VertData& vertData) {
     string sstr = str.substr(found+1, str.size() - (found + 1));
     found = sstr.find('/');
 
-    if (found == std::string::npos) {
-      cout << "Vertex face formatted incorrectly." << endl;
-      return false;
-    }
-
     if (found > 0) {
       vertData.texCoord = atof(sstr.substr(0,found).c_str());
+      vertData.normal = atof(sstr.substr(found+1,sstr.size() - (found+1)).c_str());
+    }
+    else {
+      vertData.texCoord = atof(sstr.c_str());
     }
 
-    vertData.normal = atof(sstr.substr(found+1,sstr.size() - (found+1)).c_str());
+ 
   }
   else {
     vertData.index = atof(str.c_str());

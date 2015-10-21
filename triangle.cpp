@@ -5,6 +5,9 @@
 
 Triangle::Triangle(const Mesh* mesh, const VertData& v1, const VertData& v2, const VertData& v3) : texture(NULL), _mesh(mesh)
 {
+  _hasNormals= v1.normal > 0 && v2.normal > 0 && v3.normal > 0;
+  _hasTextureCoords = v1.texCoord > 0 && v2.texCoord > 0 && v3.texCoord > 0;
+
   _vertData[0] = v1;
   _vertData[1] = v2;
   _vertData[2] = v3;
@@ -78,6 +81,10 @@ bool Triangle::intersectRay(const vec3& start, const vec3& dir, Intersect& inter
   intersect.point = start + dir*t;
   intersect.normal = _normal;
   intersect.material = material;
+
+  if (texture != NULL && _hasTextureCoords) {
+    intersect.material.objectColor = baryCoords;
+  }
 
   return true;
 }

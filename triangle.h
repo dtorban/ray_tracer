@@ -33,6 +33,8 @@ private:
   vec3 _edges[2];
   vec3 _normal;
   float _planeD;
+  bool _hasTextureCoords;
+  bool _hasNormals;
 };
 
 #endif
