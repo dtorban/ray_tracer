@@ -182,6 +182,7 @@ bool SceneParser::parse(const std::string& fileName, Scene& scene) {
 	      vec3 vert;
 	      isValid = parseVec(token, lineStream, vert);
 	      mesh->addVertex(vert);
+	      std::cout << vert << std::endl;
 	    }
 	  else if (token == "vt")
 	    {
@@ -215,7 +216,7 @@ bool SceneParser::parse(const std::string& fileName, Scene& scene) {
 	      if (isValid) {
 		mesh->addTriangle(v1, v2, v3);
 	      }
-	      //	      cout << endl;
+
 	    }
 	}
     }
@@ -251,8 +252,6 @@ bool parseVertexData(const std::string& str, VertData& vertData) {
   else {
     vertData.index = atof(str.c_str());
   }
-
-  //  cout << vertData.index << "/" << vertData.texCoord << "/" << vertData.normal << " ";
 
   return true;
 }

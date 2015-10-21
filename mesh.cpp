@@ -1,5 +1,6 @@
 #include "mesh.h"
 #include <cmath>
+#include <iostream>
 
 Mesh::Mesh() : texture(NULL)
 {

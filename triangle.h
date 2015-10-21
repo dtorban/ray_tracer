@@ -30,8 +30,13 @@ public:
   vec3 getNormal(const vec3& intersect) const;
 
 private:
+  vec3 calcBarCoords(const vec3& intersect) const;
+
   const Mesh* _mesh;
   VertData _vertData[3];
+  vec3 _edges[2];
+  vec3 _normal;
+  float _planeD;
 };
 
 #endif
