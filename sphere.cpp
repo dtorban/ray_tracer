@@ -11,10 +11,8 @@ Sphere::~Sphere()
 {
 }
 
-bool Sphere::intersectRay(const vec3& start, const vec3& dir, vec3& intersect, float& t, const GraphicsObject*& obj) const
+bool Sphere::intersectRay(const vec3& start, const vec3& dir, Intersect& intersect, float& t) const
 {
-  obj = this;
-
   // Calculate a, b, and c for quadratic formula
   float a = 1;
   vec3 dist = start-pos;
@@ -32,12 +30,15 @@ bool Sphere::intersectRay(const vec3& start, const vec3& dir, vec3& intersect, f
   
   // Calculate first solution of quadratic formula
   float t1 = (-b+sqrt(disc))/(2.0f*a);
-  intersect = start + dir*t;
 
   // If discrinament is zero, return anser
   if (disc < 0.0001 && disc > -0.0001)
   {
     t = t1;
+    intersect.point = start + dir*t;
+    intersect.material = getMaterial(intersect.point);
+    intersect.normal = getNormal(intersect.point);
+
     return true;
   }
 
@@ -46,7 +47,9 @@ bool Sphere::intersectRay(const vec3& start, const vec3& dir, vec3& intersect, f
   if (t2 < t1)
   {
     t = t2;
-    intersect = start + dir*t2;
+    intersect.point = start + dir*t2;
+    intersect.material = getMaterial(intersect.point);
+    intersect.normal = getNormal(intersect.point);
   }
 
   return true;

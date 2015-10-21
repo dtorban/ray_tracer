@@ -25,57 +25,10 @@ Triangle::~Triangle()
 {
 }
 
-bool Triangle::intersectRay(const vec3& start, const vec3& dir, vec3& intersect, float& t, const GraphicsObject*& obj) const
+//bool Triangle::intersectRay(const vec3& start, const vec3& dir, vec3& intersect, float& t, const GraphicsObject*& obj) const
+bool Triangle::intersectRay(const vec3& start, const vec3& dir, Intersect& intersect, float& t) const
 {
-  obj = this;
 
-  float d = _normal.dot(dir);
-
-  if (std::abs(d) < 0.0001)
-    {
-      return false;
-    }
-
-  t = -(_normal.dot(start) + _planeD)/d;
-
-  if (t < 0) {
-    return false;
-  }
-
-  intersect = start + dir*t;
-  vec3 barCoords = calcBarCoords(intersect);
-
-  if (barCoords.x + barCoords.y + barCoords.z - 1 < 0.001) {
-  //if (barCoords.x > 0 && barCoords.x < 1.0 && barCoords.y > 0 && barCoords.y <1.0 && barCoords.z > 0 && barCoords.z < 1.0) {
-    return true;
-  }
-
-  return false;
-}
-
-float calcArea(const vec3& a, const vec3& b)
-{
-  return a.cross(b).length()/2.0f;
-}
-
-vec3 Triangle::calcBarCoords(const vec3& intersect) const {
-  const vec3& p1 = _mesh->_vertices[_vertData[1].index-1];
-  const vec3& p2 = _mesh->_vertices[_vertData[2].index-1];
-
-  vec3 e1 = _edges[0];
-  vec3 e2 = _edges[1];
-  vec3 e3 = intersect-p1;
-  vec3 e4 = intersect-p2;
-
-  float A = calcArea(e1, e2);
-  float a = calcArea(e3, e4);
-  float b = calcArea(e4, e2);
-  float c = calcArea(e1, e3);
-
-  return vec3(a/A, b/A, c/A);
-}
-
-/*vec3 Triangle::calcBarCoords(const vec3& intersect) const {
   const vec3& p0 = _mesh->_vertices[_vertData[0].index-1];
   const vec3& p1 = _mesh->_vertices[_vertData[1].index-1];
   const vec3& p2 = _mesh->_vertices[_vertData[2].index-1];
@@ -86,15 +39,46 @@ vec3 Triangle::calcBarCoords(const vec3& intersect) const {
   float d = p0.x-p2.x;
   float e = p0.y-p2.y;
   float f = p0.z-p2.z;
+  float g = dir.x;
+  float h = dir.y;
+  float i = dir.z;
+  float j = p0.x-start.x;
+  float k = p0.y-start.y;
+  float l = p0.z-start.z;
+  float m = e*i-h*f;
+  float n = g*f-d*i;
+  float o = d*h-e*g;
+  float p = a*k-j*b;
+  float q = j*c-a*l;
+  float r = b*l-k*c;
+  float s = a*m+b*n+c*o;
 
+  t = -(f*p+e*q+d*r)/s;
 
-  return vec3(1.0f);
-  }*/
+  if (t <= 0) {
+    return false;
+  }
 
-Material Triangle::getMaterial(const vec3& intersect) const {
-  return material;
+  float gama = (i*p+h*q+g*r)/s;
+
+  if (gama <= 0 || gama >= 1) {
+    return false;
+  }
+
+  float beta = (j*m+k*n+l*o)/s;
+
+  if (beta <= 0 || beta >= 1 - gama) {
+    return false;
+  }
+
+  float alpha = 1 - (beta + gama);
+
+  vec3 baryCoords = vec3(alpha, beta, gama);
+
+  intersect.point = start + dir*t;
+  intersect.normal = _normal;
+  intersect.material = material;
+
+  return true;
 }
 
-vec3 Triangle::getNormal(const vec3& intersect) const {
-  return _normal;
-}

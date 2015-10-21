@@ -18,7 +18,7 @@ public:
   Material material;
   Texture *texture;
 
-  bool intersectRay(const vec3& start, const vec3& dir, vec3& intersect, float& t, const GraphicsObject*& obj) const;
+  bool intersectRay(const vec3& start, const vec3& dir, Intersect& intersect, float& t) const;
   Material getMaterial(const vec3& intersect) const;
   vec3 getNormal(const vec3& intersect) const;
 };
