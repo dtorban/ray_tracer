@@ -54,7 +54,7 @@ main(int argc, char** argv)
   vec3 v = u.cross(scene.viewdir).normalize()*-1.0f;
 
   // Calculate viewing window
-  float aspectRatio = (1.0*height)/width;
+  float aspectRatio = (1.0*width)/height;
   float d = 10.0f;
   float w = 2.0*d*tan(scene.fovh*PI/180.0/2.0);
   float h = w/aspectRatio;
