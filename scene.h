@@ -13,6 +13,7 @@
 
 struct Scene
 {
+  Scene() : eta(1.0) {}
   ~Scene()
   {
     for (int f = 0; f < objects.size(); f++) {
@@ -28,6 +29,7 @@ struct Scene
   bool isParallel;
 
   vec3 bkgcolor;
+  float eta;
 
   std::vector<GraphicsObject*> objects;
   std::vector<Light> lights;

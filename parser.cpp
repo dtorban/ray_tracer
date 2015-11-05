@@ -102,6 +102,13 @@ bool SceneParser::parse(const std::string& fileName, Scene& scene) {
 	    {
 	      isValid = parseVec(token, lineStream, scene.bkgcolor);
 	    }
+	  else if (token == "eta")
+	    {
+	      if(lineStream >> token)
+		{
+		  scene.eta = atof(token.c_str());
+		}
+	    }
 	  else if (token == "mtlcolor")
 	    {
 	      isValid = parseVec(token, lineStream, material.objectColor);
