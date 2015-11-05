@@ -124,6 +124,29 @@ bool SceneParser::parse(const std::string& fileName, Scene& scene) {
 		  cout << "Missing material n value." << endl;
 		  isValid = false;
 		}
+	      if(isValid && lineStream >> token)
+		{
+		  material.alpha = atof(token.c_str());
+		  if (material.alpha < 0.0 || material.alpha > 1.0)
+		    {
+		      cout << "Material alpha must be between 0 and 1." << endl;
+		      isValid = false;
+		    }
+		}
+	      else
+		{
+		  cout << "Missing material alpha value." << endl;
+		  isValid = false;
+		}
+	      if(isValid && lineStream >> token)
+		{
+		  material.eta = atof(token.c_str());
+		}
+	      else
+		{
+		  cout << "Missing material eta value." << endl;
+		  isValid = false;
+		}
 	      if (isValid) {
 		mesh->material = material;
 	      }
