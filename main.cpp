@@ -12,6 +12,7 @@
 #include "vec.h"
 #include "parser.h"
 #include <cmath>
+#include <cstdlib>
 
 #define PI 3.14159265359
 #define MAX_DEPTH 5
@@ -58,7 +59,7 @@ main(int argc, char** argv)
 
   // Calculate viewing window
   float aspectRatio = (1.0*width)/height;
-  float d = 10.0f;
+  float d = scene.viewdist;
   float w = 2.0*d*tan(scene.fovh*PI/180.0/2.0);
   float h = w/aspectRatio;
   vec3 n = scene.viewdir.normalize();
@@ -74,24 +75,33 @@ main(int argc, char** argv)
   vec3 dh = (ur - ul)/(1.0f*width-1.0f);
   vec3 dv = (ll - ul)/(1.0f*height-1.0f);
 
-  vec3 rayStart = scene.eye;
-
   // draw image
   for (int y = 0; y < height; y++)
   {
     for (int x = 0; x < width; x++)
     {
-      // Get pixel position
-      vec3 pixelPos = ul+dh*x+dv*y;
-      vec3 rayDir = (pixelPos-rayStart).normalize();
-
-      if (scene.isParallel) {
-		rayStart = pixelPos;
-		rayDir = n;
-      }
 
       // Set final color
-      image[x*height + y] = getRayColor(scene, rayStart, rayDir, 0);
+      vec3 color = vec3(0.0f);
+      int totalJitter = scene.depthOfField ? 5 : 1;
+      for (int f = 0; f < totalJitter; f++) {
+	float rndu = float(std::rand())/RAND_MAX;
+	float rndv = float(std::rand())/RAND_MAX;
+	vec3 rayStart = scene.eye + (u*rndu + v*rndv)*(scene.depthOfField ? 0.2 : 0.0f);
+
+	// Get pixel position
+	vec3 pixelPos = ul+dh*x+dv*y;
+	vec3 rayDir = (pixelPos-rayStart).normalize();
+
+	if (scene.isParallel) {
+	  rayStart = pixelPos;
+	  rayDir = n;
+	}
+
+	color += getRayColor(scene, rayStart, rayDir, 0);
+      }
+
+      image[x*height + y] = color/float(totalJitter);
     }
   }
 

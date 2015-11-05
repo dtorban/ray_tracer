@@ -13,7 +13,7 @@
 
 struct Scene
 {
-  Scene() : eta(1.0) {}
+  Scene() : eta(1.0), viewdist(1.0), depthOfField(false) {}
   ~Scene()
   {
     for (int f = 0; f < objects.size(); f++) {
@@ -30,6 +30,8 @@ struct Scene
 
   vec3 bkgcolor;
   float eta;
+  float viewdist;
+  bool depthOfField;
 
   std::vector<GraphicsObject*> objects;
   std::vector<Light> lights;

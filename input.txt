@@ -10,6 +10,8 @@ fovh  90.0
 imsize  500 500
 # Parallel projection
 #parallel
+# Depth of field
+#viewdist 7.0
 
 texture earth.ppm
 
@@ -38,7 +40,7 @@ texture
 # New color with new set of spheres
 #mtlcolor  0.0 1.0 0.0 1.0 1.0 1.0 0.2 0.7 0.5 100.0 1.0 1.0
 mtlcolor  0.0 0.0 0.0 1.0 1.0 1.0 0.1 0.1 0.5 100.0 0.01 1.1
-sphere  0.5 0.0 -5.0 1.0
+#sphere  0.5 0.0 -5.0 1.0
 texture
 sphere  -0.5 3.0 -5.0 1.0
 #texture world.ppm

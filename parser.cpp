@@ -109,6 +109,14 @@ bool SceneParser::parse(const std::string& fileName, Scene& scene) {
 		  scene.eta = atof(token.c_str());
 		}
 	    }
+	  else if (token == "viewdist")
+	    {
+	      if(lineStream >> token)
+		{
+		  scene.viewdist = atof(token.c_str());
+		  scene.depthOfField = true;
+		}
+	    }
 	  else if (token == "mtlcolor")
 	    {
 	      isValid = parseVec(token, lineStream, material.objectColor);
