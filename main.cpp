@@ -14,10 +14,13 @@
 #include <cmath>
 
 #define PI 3.14159265359
+#define MAX_DEPTH 2
 
 using namespace std;
 
-vec3 shadeRay(const Scene& scene, const vec3& pos, const vec3& normal, const Material& material);
+vec3 shadeRay(const Scene& scene, const vec3& pos, const vec3& normal, const Material& material, float eta);
+
+vec3 getRayColor(const Scene& scene, const vec3& rayStart, const vec3& rayDir, float eta, int depth);
 
 int
 main(int argc, char** argv)
@@ -87,27 +90,8 @@ main(int argc, char** argv)
 		rayDir = n;
       }
 
-      // Set background color
-      image[x*height + y] = scene.bkgcolor;
-
-      // Intersect spheres
-      Intersect intersect;
-      bool hasValue = false;
-      float t = 0.0;
-      for (int f = 0; f < scene.objects.size(); f++) {
-	float newt;
-        if (scene.objects[f]->intersectRay(rayStart, rayDir, intersect, newt))
-	{
-	  // If value is closer set pixel to this sphere color
-	  if (newt > 0 && (newt < t || !hasValue)) {
-            vec3 normal = intersect.normal;
-	    Material mtl = intersect.material;
-	    image[x*height + y] = shadeRay(scene, intersect.point, normal, mtl);
-	    t = newt;
-	    hasValue = true;
-	  }
-	}
-      }
+      // Set final color
+      image[x*height + y] = getRayColor(scene, rayStart, rayDir, scene.eta, 0);
     }
   }
 
@@ -144,7 +128,37 @@ main(int argc, char** argv)
   return 0;
 }
 
-vec3 shadeRay(const Scene& scene, const vec3& pos, const vec3& normal, const Material& material)
+vec3 getRayColor(const Scene& scene, const vec3& rayStart, const vec3& rayDir, float eta, int depth)
+{
+  if (depth >= MAX_DEPTH)
+    {
+      return scene.bkgcolor;
+    }
+
+     // Intersect geometry
+      Intersect intersect;
+      bool hasValue = false;
+      float t = 0.0;
+      vec3 color = scene.bkgcolor;
+      for (int f = 0; f < scene.objects.size(); f++) {
+	float newt;
+        if (scene.objects[f]->intersectRay(rayStart, rayDir, intersect, newt))
+	{
+	  // If value is closer set pixel to this geometry color
+	  if (newt > 0 && (newt < t || !hasValue)) {
+            vec3 normal = intersect.normal;
+	    Material mtl = intersect.material;
+	    color = shadeRay(scene, intersect.point, normal, mtl, eta);
+	    t = newt;
+	    hasValue = true;
+	  }
+	}
+      }
+
+      return color;
+}
+
+vec3 shadeRay(const Scene& scene, const vec3& pos, const vec3& normal, const Material& material, float eta)
 {
   // Caluculate diffuse and specular
   vec3 diffSpec(0.0f);
@@ -173,6 +187,8 @@ vec3 shadeRay(const Scene& scene, const vec3& pos, const vec3& normal, const Mat
   }
 
   vec3 I = material.objectColor*material.k.x + diffSpec;
+
+  //float F0 = 
 
   // Clamp I
   I.x = min(1.0f, I.x);
