@@ -112,9 +112,7 @@ bool SceneParser::parse(const std::string& fileName, Scene& scene) {
 	  else if (token == "mtlcolor")
 	    {
 	      isValid = parseVec(token, lineStream, material.objectColor);
-	      isValid = isValid && validateLength(token, material.objectColor);
 	      isValid = parseVec(token, lineStream, material.specularColor);
-	      isValid = isValid && validateLength(token, material.specularColor);
 	      isValid = parseVec(token, lineStream, material.k);
 	      isValid = isValid && validateLength(token, material.k);
 	      if(lineStream >> token)

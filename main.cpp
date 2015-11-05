@@ -14,11 +14,11 @@
 #include <cmath>
 
 #define PI 3.14159265359
-#define MAX_DEPTH 2
+#define MAX_DEPTH 5
 
 using namespace std;
 
-vec3 shadeRay(const Scene& scene, const vec3& pos, const vec3& normal, const Material& material, float eta);
+vec3 shadeRay(const Scene& scene, const vec3& pos, const vec3& normal, const Material& material, const vec3& rayDir, float eta, float depth);
 
 vec3 getRayColor(const Scene& scene, const vec3& rayStart, const vec3& rayDir, float eta, int depth);
 
@@ -148,7 +148,7 @@ vec3 getRayColor(const Scene& scene, const vec3& rayStart, const vec3& rayDir, f
 	  if (newt > 0 && (newt < t || !hasValue)) {
             vec3 normal = intersect.normal;
 	    Material mtl = intersect.material;
-	    color = shadeRay(scene, intersect.point, normal, mtl, eta);
+	    color = shadeRay(scene, intersect.point, normal, mtl, rayDir, eta, depth);
 	    t = newt;
 	    hasValue = true;
 	  }
@@ -158,7 +158,7 @@ vec3 getRayColor(const Scene& scene, const vec3& rayStart, const vec3& rayDir, f
       return color;
 }
 
-vec3 shadeRay(const Scene& scene, const vec3& pos, const vec3& normal, const Material& material, float eta)
+vec3 shadeRay(const Scene& scene, const vec3& pos, const vec3& normal, const Material& material, const vec3& rayDir, float eta, float depth)
 {
   // Caluculate diffuse and specular
   vec3 diffSpec(0.0f);
@@ -166,7 +166,7 @@ vec3 shadeRay(const Scene& scene, const vec3& pos, const vec3& normal, const Mat
   for (int f = 0; f < scene.lights.size(); f++) {
     Light light = scene.lights[f];
     vec3 L = light.getDirectionTo(pos).normalize();
-    vec3 H = (L-scene.viewdir.normalize()).normalize();
+    vec3 H = (L-rayDir.normalize()).normalize();
 
     bool includeLight = true;
 
@@ -186,9 +186,23 @@ vec3 shadeRay(const Scene& scene, const vec3& pos, const vec3& normal, const Mat
     }
   }
 
-  vec3 I = material.objectColor*material.k.x + diffSpec;
+  // Calculate reflectance
+  float F0 = (material.eta - eta)/(material.eta + eta);
+  F0 *= F0;
+  vec3 in = rayDir.normalize()*-1.0f;
+  float NdotI = normal.dot(in);
+  float Fr = F0 + (1.0f - F0)*pow(1.0 - NdotI, 5.0f);
+  vec3 R = normal*2*(NdotI)-in;
+  vec3 reflectance = getRayColor(scene, pos, R, material.eta, depth+1)*Fr;
 
-  //float F0 = 
+  // Calculate refraction
+  //vec3 refraction = (1.0f-Fr)*(exp(-material.alpha*t));
+  float ratio = eta/material.eta;
+  float ratio2 = ratio*ratio;
+  vec3 T = (normal*-sqrt(1.0f-(ratio2*(1-NdotI*NdotI)))) + (normal*NdotI-in)*ratio;
+  vec3 refraction = getRayColor(scene, pos, T, material.eta, depth+1)*(1.0f-Fr)*(1.0f-material.alpha);
+
+  vec3 I = material.objectColor*material.k.x + diffSpec + reflectance + refraction;
 
   // Clamp I
   I.x = min(1.0f, I.x);
