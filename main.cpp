@@ -18,7 +18,7 @@
 
 using namespace std;
 
-vec3 shadeRay(const Scene& scene, const vec3& pos, const vec3& normal, const Material& material, const vec3& rayDir, float depth);
+vec3 shadeRay(const Scene& scene, const vec3& pos, const vec3& normal, const Material& material, const vec3& rayDir, float t, float depth);
 
 vec3 getRayColor(const Scene& scene, const vec3& rayStart, const vec3& rayDir, int depth);
 
@@ -148,8 +148,8 @@ vec3 getRayColor(const Scene& scene, const vec3& rayStart, const vec3& rayDir, i
 	  if (newt > 0.0001f && (newt < t || !hasValue)) {
             vec3 normal = intersect.normal;
 	    Material mtl = intersect.material;
-	    color = shadeRay(scene, intersect.point, normal, mtl, rayDir, depth);
 	    t = newt;
+	    color = shadeRay(scene, intersect.point, normal, mtl, rayDir, t, depth);
 	    hasValue = true;
 	  }
 	}
@@ -158,7 +158,7 @@ vec3 getRayColor(const Scene& scene, const vec3& rayStart, const vec3& rayDir, i
       return color;
 }
 
-vec3 shadeRay(const Scene& scene, const vec3& pos, const vec3& normal, const Material& material, const vec3& rayDir, float depth)
+vec3 shadeRay(const Scene& scene, const vec3& pos, const vec3& normal, const Material& material, const vec3& rayDir, float travel, float depth)
 {
   // Caluculate diffuse and specular
   vec3 diffSpec(0.0f);
@@ -192,20 +192,28 @@ vec3 shadeRay(const Scene& scene, const vec3& pos, const vec3& normal, const Mat
   float etai = enter ? scene.eta : material.eta;
   float etat = !enter ? scene.eta : material.eta;
 
+  float NdotI = N.dot(in);
+  float thetai = acos(NdotI);
+  float thetac = asin(etat/etai);
+
   // Calculate reflectance
   float F0 = (etat - etai)/(etat + etai);
   F0 *= F0;
-  float NdotI = N.dot(in);
   float Fr = F0 + (1.0f - F0)*pow(1.0 - NdotI, 5.0f);
-  vec3 R = normal*2*(NdotI)-in;
+  if (thetac < thetai)
+    {
+      Fr = 1.0f;
+    }
+  vec3 R = N*2*(NdotI)-in;
   vec3 reflectance = getRayColor(scene, pos, R, depth+1)*Fr;
 
   // Calculate refraction
-  //vec3 refraction = (1.0f-Fr)*(exp(-material.alpha*t));
   float ratio = etai/etat;
   float ratio2 = ratio*ratio;
-  vec3 T = (normal*-sqrt(1.0f-(ratio2*(1-NdotI*NdotI)))) + (normal*NdotI-in)*ratio;
-  vec3 refraction = getRayColor(scene, pos, T, depth+1)*(1.0f-Fr)*(1.0f-material.alpha);
+  vec3 T = (N*-sqrt(1.0f-(ratio2*(1-NdotI*NdotI)))) + (N*NdotI-in)*ratio;
+  //vec3 refraction = (1.0f-Fr)*(exp(-material.alpha*travel));
+  //vec3 refraction = getRayColor(scene, pos, T, depth+1)*(1.0f-Fr)*(1.0f-material.alpha);
+  vec3 refraction = getRayColor(scene, pos, T, depth+1)*(1.0f-Fr)*exp(-material.alpha*travel);
 
   vec3 I = material.objectColor*material.k.x + diffSpec + reflectance + refraction;
 
