@@ -23,7 +23,7 @@ bool Sphere::intersectRay(const vec3& start, const vec3& dir, Intersect& interse
   float disc = b*b-4.0*a*c;
 
   // If the discriminant is negative, there is no intersection
-  if (disc < 0)
+  if (disc < 0.0001)
   {
     return false;
   }
